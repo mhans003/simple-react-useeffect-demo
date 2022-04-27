@@ -13,10 +13,19 @@ const Login = (props) => {
 
   //Use useEffect to validate form (cannot be sumbitted if not valid) again when password or email changes
   useEffect(() => {
-    setFormIsValid(
-      //Both email and password must be valid for form to be valid.
-      enteredEmail.includes('@') && enteredPassword.trim().length > 6
-    );
+    //Only check form validity if there is a 500 ms pause between keystrokes
+    const identifier = setTimeout(() => {
+      setFormIsValid(
+        //Both email and password must be valid for form to be valid.
+        enteredEmail.includes('@') && enteredPassword.trim().length > 6
+      );
+    }, 500);
+
+    //Use clean up function to run before next execution
+    return () => {
+      //Prevent setFormIsValid from running from last iteration.
+      clearTimeout(identifier);
+    };
   }, [enteredEmail, enteredPassword]);
 
   const emailChangeHandler = (event) => {
