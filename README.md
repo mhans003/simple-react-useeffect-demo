@@ -7,7 +7,12 @@
 
 ## Description 
 
-This app demonstrates React features pertaining to the useEffect hook. 
+This app demonstrates React features pertaining to:
+
+* useEffect
+* useReducer
+* useContext (Context API)
+* Other Fundamental React Concepts (Components, Props, State, etc.)
 
 ## Contact
 
