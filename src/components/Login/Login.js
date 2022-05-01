@@ -62,14 +62,17 @@ const Login = (props) => {
     isValid: false
   });
 
+  //Destructure just the validity state for password and email; Used for dependency in useEffect when validity changes.
+  const { isValid: emailIsValid } = emailState;
+  const { isValid: passwordIsValid } = passwordState;
+
   //Use useEffect to validate form (cannot be sumbitted if not valid) again when password or email changes
-  /*
   useEffect(() => {
     //Only check form validity if there is a 500 ms pause between keystrokes
     const identifier = setTimeout(() => {
       setFormIsValid(
         //Both email and password must be valid for form to be valid.
-        emailState.isValid && enteredPassword.trim().length > 6
+        emailState.isValid && passwordState.isValid
       );
     }, 500);
 
@@ -78,25 +81,28 @@ const Login = (props) => {
       //Prevent setFormIsValid from running from last iteration.
       clearTimeout(identifier);
     };
-  }, [enteredEmail, enteredPassword]);
-  */
+  }, [emailIsValid, passwordIsValid]);
 
   const emailChangeHandler = (event) => {
     dispatchEmail({type: 'USER_INPUT', val: event.target.value});
 
+    /*
     setFormIsValid(
       //event.target.value.includes('@') && passwordState.trim().length > 6
       emailState.isValid && passwordState.isValid
     );
+    */
   };
 
   const passwordChangeHandler = (event) => {
     dispatchPassword({type: 'USER_INPUT', val: event.target.value});
 
+    /*
     setFormIsValid(
       //event.target.value.includes('@') && passwordState.trim().length > 6
       emailState.isValid && passwordState.isValid
     );
+    */
   };
 
   const validateEmailHandler = () => {
