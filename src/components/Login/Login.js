@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useContext } from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
 import Button from '../UI/Button/Button';
+import AuthContext from '../../store/auth-context';
 
 //Define reducer functions in orer to reference within useReducer rather than using anonymous function directly in useReducer
 const emailReducer = (state, action) => {
@@ -43,11 +44,8 @@ const passwordReducer = (state, action) => {
   };
 };
 
-const Login = (props) => {
-  //const [enteredEmail, setEnteredEmail] = useState('');
-  //const [emailIsValid, setEmailIsValid] = useState();
-  //const [enteredPassword, setEnteredPassword] = useState('');
-  //const [passwordIsValid, setPasswordIsValid] = useState();
+const Login = () => {
+  //Set state for form validity overall 
   const [formIsValid, setFormIsValid] = useState(false);
 
   //Define email state using useReducer (groups value and validity)
@@ -61,6 +59,9 @@ const Login = (props) => {
     value: '',
     isValid: false
   });
+
+  //Use context to refer to login state for app
+  const authCtx = useContext(AuthContext);
 
   //Destructure just the validity state for password and email; Used for dependency in useEffect when validity changes.
   const { isValid: emailIsValid } = emailState;
@@ -85,24 +86,10 @@ const Login = (props) => {
 
   const emailChangeHandler = (event) => {
     dispatchEmail({type: 'USER_INPUT', val: event.target.value});
-
-    /*
-    setFormIsValid(
-      //event.target.value.includes('@') && passwordState.trim().length > 6
-      emailState.isValid && passwordState.isValid
-    );
-    */
   };
 
   const passwordChangeHandler = (event) => {
     dispatchPassword({type: 'USER_INPUT', val: event.target.value});
-
-    /*
-    setFormIsValid(
-      //event.target.value.includes('@') && passwordState.trim().length > 6
-      emailState.isValid && passwordState.isValid
-    );
-    */
   };
 
   const validateEmailHandler = () => {
@@ -115,7 +102,8 @@ const Login = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(emailState.value, passwordState.value);
+    //Set the login state at the level of the app (using Context).
+    authCtx.onLogin(emailState.value, passwordState.value);
   };
 
   return (
